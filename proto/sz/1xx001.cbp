@@ -1,0 +1,28 @@
+import "sz/sz_common_define.cbp"
+
+struct msg_1xxx01 {
+  ApplID appl_id;
+  SubmittingPBUID submitting_pbuid;
+  SecurityID security_id;
+  SecurityIDSource security_id_source;
+  OwnerType owner_type;
+  ClearingFirm clearing_firm;
+  TransactTime transact_time;
+  UserInfo user_info;
+  ClOrdID cl_ord_id;
+  AccountID account_id;
+  BranchID branch_id; 
+  OrderRestrictions order_restrictions;
+  Side side;
+  OrdType ord_type;
+  OrderQty order_qty;
+  Price price;
+}
+
+struct msg_100201 {
+  ref msg_1xxx01;
+  StopPx stop_px;
+  MinQty min_qty;
+  MaxPriceLevels max_price_levels;
+  TimeInForce time_in_force;
+}

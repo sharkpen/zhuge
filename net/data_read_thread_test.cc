@@ -11,6 +11,7 @@ using namespace croot::lltg;
 int main(int argc, char* argv[]) {
   DevReader reader;
   reader.Start(argc, argv);
+  reader.ReadBuffer();
 }
 
 
