@@ -13,12 +13,16 @@
 namespace croot {
 namespace lltg {
 
-class Field {
+struct Type {
   std::string name;
-  FieldType type;
   int32_t len;
   std::string ref_field;
   std::string ref_class;
+};
+
+class Field {
+  std::string name;
+  Type type;
 };
 
 class ClassDesp {

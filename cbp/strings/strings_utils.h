@@ -60,6 +60,11 @@ bool inline is_prefix(const std::string &prefix, const std::string &sen) {
   return true;
 }
 
+bool inline is_blank(const std::string &str) {
+  return "" == trim(str, ' ');
+}
+
+
 }  // namespace strings
 }  // namespace lltg
 }  // namespace croot

@@ -6,11 +6,13 @@
  Last Modified: 2023-09-07
 */
 #pragma once
+#include <memory>
 #include <string>
 #include <iostream>
 #include <filesystem>
 
 #include "cbp_file.h"
+#include "context.h"
 namespace croot {
 namespace lltg {
 
@@ -25,8 +27,7 @@ class Parser {
           ListFiles(entry.path().string(), files);
         } else if (entry.is_regular_file()) {
           // 如果是文件，打印文件名
-          std::cout << entry.path().filename() << std::endl;
-          std::cout << entry.path().string() << std::endl;
+          std::cout << "get source file " << entry.path().filename() << std::endl;
           files->push_back(entry.path().string());
         }
       }
@@ -41,7 +42,9 @@ class Parser {
     std::vector<std::string> files;
     ListFiles(root, &files);
     parser.GeneratorCbpFiles(root, files);
-
+    parser.ParseOrder();
+    std::shared_ptr<ParseContext> context = std::make_shared<ParseContext>();
+    parser.ParserCbpFiles(context);
   };
 };
 
