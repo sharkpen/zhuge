@@ -16,7 +16,7 @@ namespace lltg {
 void inline print_err(const Token &token, const std::string &msg) {
   std::cerr << msg <<std::endl;
   std::cerr << "synax error at line : " << token.line
-    << " offset : " << token.offset <<std::endl;
+    << " offset : " << token.offset << " : " << token.term << std::endl;
 }
 
 }  // namespace lltg

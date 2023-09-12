@@ -70,7 +70,6 @@ class TokenParser {
         token.line = -1;
         token.offset = -1;
         token.term = "";
-        std::cout << token <<std::endl;
         return token;
       };
       line++;
@@ -80,7 +79,6 @@ class TokenParser {
       token.term = term;
       token.line = line;
       token.offset = line_ite->Offset();
-      std::cout << token <<std::endl;
       return token;
     }
   }

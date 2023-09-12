@@ -16,6 +16,7 @@ namespace lltg {
 struct Type {
   std::string name;
   int32_t len;
+  std::string type;
   std::string ref_field;
   std::string ref_class;
 };

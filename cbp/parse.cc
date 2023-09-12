@@ -17,7 +17,8 @@ using namespace croot::lltg;
 int main() {
   
   Parser parser;
-  parser.Parse("/home/lijinqi/workspace/zhuge/proto");
+  //parser.Parse("/home/lijinqi/workspace/zhuge/proto");
+  parser.Parse("/Users/sharkpen/workapace/zhuge/proto");
   
   return 0;
 }

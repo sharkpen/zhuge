@@ -17,8 +17,8 @@ void ListFilesInDirectory(const std::string& path) {
                 ListFilesInDirectory(entry.path().string());
             } else if (entry.is_regular_file()) {
                 // 如果是文件，打印文件名
-                std::cout << entry.path().filename() << std::endl;
-                std::cout << entry.path().string() << std::endl;
+                //std::cout << entry.path().filename() << std::endl;
+                //std::cout << entry.path().string() << std::endl;
             }
         }
     } catch (const std::exception& ex) {

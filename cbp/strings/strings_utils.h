@@ -59,11 +59,27 @@ bool inline is_prefix(const std::string &prefix, const std::string &sen) {
   }
   return true;
 }
+bool inline is_suffix(const std::string &suffix, const std::string &sen) {
+  if (suffix.size() > sen.size()) {
+    return false;
+  }
+  const char *suffix_buff = suffix.c_str();
+  const char *sen_buff = sen.c_str();
+  for (int i = 0; i < suffix.size(); i++) {
+    if (suffix_buff[suffix.size() - i - 1] != sen_buff[sen.size() - i - 1]) {
+      return false;
+    }
+  }
+  return true;
+}
 
 bool inline is_blank(const std::string &str) {
   return "" == trim(str, ' ');
 }
 
+bool inline string2int(const std::string &str, int64_t *value) {
+  return 0;
+}
 
 }  // namespace strings
 }  // namespace lltg

@@ -13,7 +13,6 @@ namespace lltg {
 class ClassParser {
   public:
     std::string Parse(ClassDesp *type);
-
 };
 }  // namespace lltg
 }  // namespace croot

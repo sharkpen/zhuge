@@ -27,7 +27,7 @@ class Parser {
           ListFiles(entry.path().string(), files);
         } else if (entry.is_regular_file()) {
           // 如果是文件，打印文件名
-          std::cout << "get source file " << entry.path().filename() << std::endl;
+          //std::cout << "get source file " << entry.path().filename() << std::endl;
           files->push_back(entry.path().string());
         }
       }

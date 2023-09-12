@@ -70,22 +70,57 @@ class CbpFile {
       if (token.line == -1 && token.offset == -1) {
         break;
       }
+      if ("##" == token.term || strings::is_prefix("##", token.term)) {
+        break;
+      }
       if (token.line > note_line) {
         break;
       }
       ss << token.term;
     }
+    std::string value = ss.str();
     auto field_context = context->contexts[name];
-    field_context->define_maps[name_token.term] = ss.str();
+    field_context->define_maps[name_token.term] = value;
   }
-  void ParseField(std::shared_ptr<ParseContext> context, TokenParser &parser) {
+  
+  Type ParseType(std::shared_ptr<ParseContext> context, TokenParser &parser) {
     Token token = parser.CurrentToken();
-    std::cout << token << std::endl;
-    while(token.term != ";") {
-      token = parser.NextToken();
+    std::string type = token.term;
+    if (Const::normal_types.count(type) == 0) {
       print_err(token, name);
     }
-    
+    token = parser.NextToken();
+    Type ttype;
+    if (token.term == "[") {
+      token = parser.NextToken();
+      int64_t v;
+      if (strings::string2int(token.term, &v)) {
+        ttype.len = v;
+      } else {
+        print_err(token, name);
+      }
+
+    }
+    if (token.term == "<") {
+      token = parser.NextToken();
+    }
+    token = parser.NextToken();
+    std::string field_name = token.term;
+    ttype.name = field_name;
+    ttype.type = type;
+    return ttype;
+  }
+ 
+  void ParseField(std::shared_ptr<ParseContext> context, TokenParser &parser) {
+    Token token = parser.CurrentToken();
+    Type type = ParseType(context, parser);
+    std::string field_name = parser.CurrentToken().term;
+    token = parser.NextToken();
+    if (token.term != ";") {
+      print_err(token, name);
+    } else {
+      parser.NextToken();
+    }
   }
   
   void ParseStruct(std::shared_ptr<ParseContext> context, TokenParser &parser) {
@@ -101,14 +136,14 @@ class CbpFile {
     auto class_desp = std::make_shared<ClassDesp>();
     cbp_context->classes_desp[struct_name.term] = class_desp;
     Token token = parser.NextToken();
-    while(true) {
+    while(token.term != "}") {
+      token = parser.CurrentToken();
       if (token.term == "##" || strings::is_prefix("##", token.term)) {
         ParseNote(context, parser);
         continue;
       }
-      if (token.term != "}") {
-        ParseField(context, parser);
-      }
+      ParseField(context, parser);
+      token = parser.CurrentToken();
     }
     parser.NextToken();
   }
@@ -134,24 +169,78 @@ class CbpFile {
       if (token.line == -1 && token.offset == -1) {
         break;
       }
-      std::cout << "test " <<std::endl;
+    }
+  }
+  
+  void ParseCbp(std::shared_ptr<ParseContext> context, TokenParser &parser) {
+    parser.NextToken();
+    while (true) {
+      auto token = parser.CurrentToken();
+      if (token.term == "##" || strings::is_prefix("##", token.term)) {
+        ParseNote(context, parser);
+        continue;
+      }
+      if (token.term == "#define") {
+        ParseDefine(context, parser);
+        continue;
+      }
+      token = parser.NextToken();
+      if (token.line == -1 && token.offset == -1) {
+        break;
+      }
     }
   }
   static std::string GetDefineValue(const std::string &value,
       const std::string &name, std::shared_ptr<ParseContext> context) {
-    context->contexts[name];
+    auto cbp_context = context->contexts[name];
+    if (cbp_context->define_maps.count(value) > 0) {
+      std::string result =  cbp_context->define_maps.at(value);
+      if (is_field_type(result)) {
+        return result;
+      } else {
+        return GetDefineValue(result, name, context);
+      }
+    } else {
+      for (auto &dep : cbp_context->deps) {
+        auto result = GetDefineValue(value, dep, context);
+        if (result != "") {
+          return result;
+        }
+      }
+    }
     return "";
   }
+
   File* GenerateNewFile(TokenParser &parser, std::shared_ptr<ParseContext> context) {
+    File *f = new File();
     auto &token = parser.NextToken();
     int line = token.line;
+    std::stringstream ss;
     while (token.line != -1 && token.offset != -1) {
-      auto term = token.term;
-
+      std::string term = token.term;
+      if (token.term == "##" || strings::is_prefix("##", token.term)) {
+        ParseNote(context, parser);
+        continue;
+      }
+      if (token.term == "#define") {
+        ParseDefine(context, parser);
+        continue;
+      }
+      auto result = GetDefineValue(term, name, context);
+      if (result != "") {
+        term = result; 
+      }
+      if (token.line > line) {
+        f->PutLine(ss.str());
+        ss.clear();
+        ss.str("");
+        line = token.line;
+      }
+      ss << term << ' ';
+      token = parser.NextToken();
     }
-    
-
-    return nullptr;
+    f->PutLine(ss.str());
+    return f;
   }
   bool PreParseSelf(std::shared_ptr<ParseContext> context) {
     for (const auto &dep_name : deps) {
@@ -167,8 +256,32 @@ class CbpFile {
     TokenParser parser(this->file);
     ParseMacro(context, parser);
     parser.Reset();
+    File *f = GenerateNewFile(parser, context);
+    file = f;
+    file->Print();
     context->parse_success.insert(name);
-
+    return true;
+  }
+  bool ParseSelf(std::shared_ptr<ParseContext> context) {
+    auto cbp_context = std::make_shared<CbpFileContext>();
+    context->contexts[name] = cbp_context;
+    TokenParser parser(this->file);
+    auto token = parser.NextToken();
+    while (token.line != -1) {
+      token = parser.CurrentToken();
+      if (token.line == -1 && token.offset == -1) {
+        break;
+      }
+      if (token.term == "import") {
+        ParseImport(context, parser);
+        continue;
+      }
+      if (token.term == "struct") {
+        ParseStruct(context, parser);
+        continue;
+      }
+      token = parser.NextToken();
+    }
     return true;
   }
   int GetDepFilesNum() { return deps.size(); }
@@ -191,6 +304,9 @@ class CbpParser {
   void GeneratorCbpFiles(const std::string &root,
                          std::vector<std::string> &files) {
     for (const auto &name : files) {
+      if (!strings::is_suffix(".cbp", name)) {
+        continue;
+      }
       auto key = cut_prefix_path(root, name);
       File *f = new File();
       std::ifstream file(name);
@@ -205,8 +321,8 @@ class CbpParser {
       cbp_files[key] = cbp_file;
       cbp_file->ParseDep();
       order_files.push_back(cbp_file);
-      std::cout << "cbp parser " << key
-                << " dep :" << cbp_file->GetDepFilesNum() << std::endl;
+      //std::cout << "cbp parser " << key
+     //           << " dep :" << cbp_file->GetDepFilesNum() << std::endl;
     }
   }
 
@@ -244,7 +360,7 @@ class CbpParser {
           break;
         }
         if (mark == success) {
-          std::cout << success << "   " << group->files.size() << std::endl;
+          //std::cout << success << "   " << group->files.size() << std::endl;
           std::cerr << "file dependency recursion ";
           for (auto file : group->files) {
             if (context->parse_success.count(file->GetName()) == 0) {
@@ -254,6 +370,9 @@ class CbpParser {
           return false;
         }
       }
+    }
+    for (auto f : order_files) {
+      f->ParseSelf(context);
     }
     return true;
   }
