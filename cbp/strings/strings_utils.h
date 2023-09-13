@@ -8,6 +8,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <cstdlib>
+#include <stdexcept>
+
 namespace croot {
 namespace lltg {
 namespace strings {
@@ -78,7 +81,13 @@ bool inline is_blank(const std::string &str) {
 }
 
 bool inline string2int(const std::string &str, int64_t *value) {
-  return 0;
+  try {
+        *value = std::stol(str); 
+        return true;
+    } catch (const std::invalid_argument& e) {
+    } catch (const std::out_of_range& e) {
+    }
+  return false;
 }
 
 }  // namespace strings

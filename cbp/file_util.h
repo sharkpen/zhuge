@@ -16,6 +16,11 @@ std::string cut_prefix_path(const std::string& prefix,
                             const std::string& path);
 
 
+std::string get_file_by_path(const std::string& path);
+std::string get_dir_by_path(const std::string& path);
+
+
+
 }  // namespace lltg
 }  // namespace croot
 

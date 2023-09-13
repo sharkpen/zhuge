@@ -7,6 +7,7 @@
 */
 #include "file_util.h"
 
+#include <sstream>
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -39,6 +40,28 @@ std::string cut_prefix_path(const std::string &root,
   }
   return "";
 }
+std::string get_file_by_path(const std::string& path) {
+  std::string trim = trim_path(path); 
+  std::vector<std::string> paths;
+  strings::split(trim, '/', &paths);
+  if (paths.empty()) {
+    return "";
+  }
+  return paths.back();
+};
+
+std::string get_dir_by_path(const std::string& path) {
+  std::vector<std::string> paths;
+  strings::split(path, '/', &paths);
+  if (paths.size() <= 1) {
+    return "";
+  }
+  std::stringstream ss;
+  for (int i = 0; i < paths.size() - 1; i++) {
+    ss << paths.at(i) << '/';
+  }
+  return ss.str();
+};
 
 }  // namespace lltg
 }  // namespace croot

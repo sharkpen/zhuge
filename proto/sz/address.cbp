@@ -1,0 +1,15 @@
+struct address {
+     char[14] value;
+}
+
+struct person {
+    char[4] name;
+}
+
+struct employee {
+    ref person;
+    int32 age;
+    array<2, person> parents;
+    int32 address_num;
+    array<ref address_num, address> addresses;
+}

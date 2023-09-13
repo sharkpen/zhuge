@@ -1,264 +1,264 @@
 ## 数据类型
 
-define Price int64
-define Qty int64
-define Amt int64
-define SeqNum int64
-define Boolean int16
-define Length int32
-define LocalTimeStamp int64
-define NumInGroup int32
-define LocalMktDate int32
-define SecurityID char[8]
-define PBUID char[6]
-define AccountID char[12]
-define BranchID char[4]
-define MemberID char[6]
-define InvestorType char[2]
-define InvestorID char[10]
-define TraderCode char[8]
-define InvestorName char[120]
+#define Price int64
+#define Qty int64
+#define Amt int64
+#define SeqNum int64
+#define Boolean int16
+#define Length int32
+#define LocalTimestamp int64
+#define NumInGroup int32
+#define LocalMktDate int32
+#define SecurityID char[8]
+#define PBUID char[6]
+#define AccountID char[12]
+#define BranchID char[4]
+#define MemberID char[6]
+#define InvestorType char[2]
+#define InvestorID char[10]
+#define TraderCode char[8]
+#define InvestorName char[120]
 
 ## 会话层数据
 
 
-define BodyLength int32
-define MsgType int32
-define SenderCompID char[20]
-define TargetCompID char[20]
-define Password char[16]
-define Text char[200]
-define HeartBtInt int32
-define DefaultApplVerID char[32]
-define SessionStatus intt32
+#define BodyLength int32
+#define MsgType int32
+#define SenderCompID char[20]
+#define TargetCompID char[20]
+#define Password char[16]
+#define Text char[200]
+#define HeartBtInt int32
+#define DefaultApplVerID char[32]
+#define SessionStatus intt32
 
 
 ## 业务层定义
 
-define AlertRatio int32
-define ApplID char[3]
-define AccruedInterestAmt Amt
-define AllocSettlCurrAmt 
+#define AlertRatio int32
+#define ApplID char[3]
+#define AccruedInterestAmt Amt
+#define AllocSettlCurrAmt 
 
-define BasketID int16
-define BidPositionEffect char
-define BidPx Price
-define BidSize Qty
-define BidExecInstType int16
-define BidTransType int16
-define BusinessRejectReason int16
-define BusinessRejectRefID char[10]
-define BusinessRejectText char[50]
+#define BasketID int16
+#define BidPositionEffect char
+#define BidPx Price
+#define BidSize Qty
+#define BidExecInstType int16
+#define BidTransType int16
+#define BusinessRejectReason int16
+#define BusinessRejectRefID char[10]
+#define BusinessRejectText char[50]
 
-define CashMargin char
-define CashOrderQty Amt
-define ClearingFirm char[2]
-define ClOrdID char[10]
-define ConfirmID char[8]
-define ContactInfo char[30]
-define Contactor char[12]
-define ContractAccountCode char[6]
-define CounterpartyAccountID AccoutID
-define CounterpartyBranchID BranchID
-define CounterpartyConfirmID char[8]
-define CounterpartyExecID char[16]
-define CounterpartyExecutingTrader char[17]
-define CounterpartyLastQty Qty
-define CounterpartyLastPx Price
-define CounterpartyInvestorID InvestorID
-define CounterpartyInvestorName InvestorName
-define CounterpartyInvestorType InvestorType
-define CounterpartyMemberID MemberID
-define CounterpartyMemo char[160]
-define CounterpartyPBUID PBUID
-define CounterpartyTraderCode TraderCode
-define CoveredOrUncovered int8
-define CumQty Qty
-define CxlRejReason int16
+#define CashMargin char
+#define CashOrderQty Amt
+#define ClearingFirm char[2]
+#define ClOrdID char[10]
+#define ConfirmID char[8]
+#define ContactInfo char[30]
+#define Contactor char[12]
+#define ContractAccountCode char[6]
+#define CounterpartyAccountID AccoutID
+#define CounterpartyBranchID BranchID
+#define CounterpartyConfirmID char[8]
+#define CounterpartyExecID char[16]
+#define CounterpartyExecutingTrader char[17]
+#define CounterpartyLastQty Qty
+#define CounterpartyLastPx Price
+#define CounterpartyInvestorID InvestorID
+#define CounterpartyInvestorName InvestorName
+#define CounterpartyInvestorType InvestorType
+#define CounterpartyMemberID MemberID
+#define CounterpartyMemo char[160]
+#define CounterpartyPBUID PBUID
+#define CounterpartyTraderCode TraderCode
+#define CoveredOrUncovered int8
+#define CumQty Qty
+#define CxlRejReason int16
 
-define DeductionAccountID AccoutID
-define DeductionPBU PBUID
-define DeliverQty Qty
-define DeliverySide char
-define DesignationInstruction char
-define DesignationTransType int8
-define DisposalAccountID AccoutID
-define DisposalPBU PBUID
+#define DeductionAccountID AccoutID
+#define DeductionPBU PBUID
+#define DeliverQty Qty
+#define DeliverySide char
+#define DesignationInstruction char
+#define DesignationTransType int8
+#define DisposalAccountID AccoutID
+#define DisposalPBU PBUID
 
-define ExecID char[16]
-define ExecType char
-define ExecutingTrader char[17]
-define ExpirationDays int16
-define ExpirationExecInst int8
-define ExpirationType int8
-define ExpireTime LocalTimestamp
+#define ExecID char[16]
+#define ExecType char
+#define ExecutingTrader char[17]
+#define ExpirationDays int16
+#define ExpirationExecInst int8
+#define ExpirationType int8
+#define ExpireTime LocalTimestamp
 
-define FundPBUID char[6]
-define GracePeriod int16
+#define FundPBUID char[6]
+#define GracePeriod int16
 
-define HighLimitPrice Price
-## define IMCRejectText char[]  // 边长字段的定义有其他方式,需要指定边长字段位置
+#define HighLimitPrice Price
+## #define IMCRejectText char[]  // 边长字段的定义有其他方式,需要指定边长字段位置
 
-define IMCRejectTextLen NumInGroup
-define InsufficientSecurityID char[8]
-define InvestmentType char[2]
-define IOIID char[10] 
-define IOIQty Qty
-define IOIRefID char[10]
-define IOITransType char
-define LastParPx Price
-define LastPx Price
-define LastQty Qty
-define LeavesQty Qty
-define LegOrderQty Qty
-define LegSecurityID char[8]
-define LegSecurityIDSource char[4]
-define LegSide char
-define LenderAccountID AccountID
-define LenderPBU PBUID
-define LotType char
-define LowLimitPrice Price
+#define IMCRejectTextLen NumInGroup
+#define InsufficientSecurityID char[8]
+#define InvestmentType char[2]
+#define IOIID char[10] 
+#define IOIQty Qty
+#define IOIRefID char[10]
+#define IOITransType char
+#define LastParPx Price
+#define LastPx Price
+#define LastQty Qty
+#define LeavesQty Qty
+#define LegOrderQty Qty
+#define LegSecurityID char[8]
+#define LegSecurityIDSource char[4]
+#define LegSide char
+#define LenderAccountID AccountID
+#define LenderPBU PBUID
+#define LotType char
+#define LowLimitPrice Price
 
-define MarginAmount Amt
-define MarginItem int8
-define MarketID char[8]
-define MaturityDate LocalMktDate
-define MaxFloor Qty
-define MaxPriceLevels int16
-define Memo char[160]
-define MinQty Qty
-define NoBaskets NumInGroup
-define NoCounterparty NumInGroup
-define NoCounterpartyPBU NumInGroup
-define NoLegs NumInGroup
-define NoMarginItems NumInGroup
-define NoPartitions NumInGroup
-define NoPartyIDs NumInGroup
-define NoQuote NumInGroup
-define NoSecurity NumInGroup
+#define MarginAmount Amt
+#define MarginItem int8
+#define MarketID char[8]
+#define MaturityDate LocalMktDate
+#define MaxFloor Qty
+#define MaxPriceLevels int16
+#define Memo char[160]
+#define MinQty Qty
+#define NoBaskets NumInGroup
+#define NoCounterparty NumInGroup
+#define NoCounterpartyPBU NumInGroup
+#define NoLegs NumInGroup
+#define NoMarginItems NumInGroup
+#define NoPartitions NumInGroup
+#define NoPartyIDs NumInGroup
+#define NoQuote NumInGroup
+#define NoSecurity NumInGroup
 
-define OfferAccountID AccountID
-define OfferBranchID BranchID
-define OfferPBUID PBUID
-define OfferPositionEffect char
-define OfferPx Price
-define OfferSize Qty
-define OrderID char[16]
-define OrderQty Qty
-define OrderRestrictions char[4]
-define OrdRejReason int16
-define OrdStatus char
-define OrdType char
+#define OfferAccountID AccountID
+#define OfferBranchID BranchID
+#define OfferPBUID PBUID
+#define OfferPositionEffect char
+#define OfferPx Price
+#define OfferSize Qty
+#define OrderID char[16]
+#define OrderQty Qty
+#define OrderRestrictions char[4]
+#define OrdRejReason int16
+#define OrdStatus char
+#define OrdType char
 
-define OrigClOrdID char[10]
-define OrigSubmittingPBUID PBUID
-define OrigTradeDate LocalMktDate
-define OrigTradeID char[16]
-define OrigTradeReportID char[10]
+#define OrigClOrdID char[10]
+#define OrigSubmittingPBUID PBUID
+#define OrigTradeDate LocalMktDate
+#define OrigTradeID char[16]
+#define OrigTradeReportID char[10]
 
-define OwnerType int16
-define PartitionNo int32
-define PlatformID int16
+#define OwnerType int16
+#define PartitionNo int32
+#define PlatformID int16
 
-define PlatformState int16
+#define PlatformState int16
 
-define PledgeeType int16
-define PositionEffect char
-define PreTradeAnonymity int8
+#define PledgeeType int16
+#define PositionEffect char
+#define PreTradeAnonymity int8
 
-define PriceType int8
-define PrivateQuote int8
-define QuoteID char[10]
-define QuoteMsgID char[10]
-define QuotePrice Price
-define QuotePriceType int16
+#define PriceType int8
+#define PrivateQuote int8
+#define QuoteID char[10]
+#define QuoteMsgID char[10]
+#define QuotePrice Price
+#define QuotePriceType int16
 
-define QuoteQty Qty
-define QuoteRejectReason int16
-define QuoteRejectText char[50]
-define QuoteReqID char[10]
+#define QuoteQty Qty
+#define QuoteRejectReason int16
+#define QuoteRejectText char[50]
+#define QuoteReqID char[10]
 
-define QuoteRequestRejectReason int16
-define QuoteRequestRejectText char[50]
-define QuoteRequestStatus int8
-define QuoteRequestTransType int16
-define QuoteRequestType int16
-define QuoteRespID char[16]
-define QuoteRespType int8
-define QuoteStatus int8
-define QuoteType int8
-define RefMsgType int21
-define RefSeqNum SeqNum
+#define QuoteRequestRejectReason int16
+#define QuoteRequestRejectText char[50]
+#define QuoteRequestStatus int8
+#define QuoteRequestTransType int16
+#define QuoteRequestType int16
+#define QuoteRespID char[16]
+#define QuoteRespType int8
+#define QuoteStatus int8
+#define QuoteType int8
+#define RefMsgType int21
+#define RefSeqNum SeqNum
 
-define RejectText char[16]
-define ReportIndex SeqNum
-define ReportingPBUID PUBID
-define TradeReportRejectText char[50]
-define RptExecID char[16]
-define SecondaryExecID char[16]
-define SecondaryOrderID char[16]
-define SecurityID char[8]
-define SecurityIDSource char[4]
-define SecurityType char[8]
-define SecuritySubType char[8]
-define SettlCurrAmt Amt
-define SettlementRatio int32
-define SettlPeriod int8
-define SettlType int16
-define ShareProperty char[2]
+#define RejectText char[16]
+#define ReportIndex SeqNum
+#define ReportingPBUID PUBID
+#define TradeReportRejectText char[50]
+#define RptExecID char[16]
+#define SecondaryExecID char[16]
+#define SecondaryOrderID char[16]
+#define SecurityID char[8]
+#define SecurityIDSource char[4]
+#define SecurityType char[8]
+#define SecuritySubType char[8]
+#define SettlCurrAmt Amt
+#define SettlementRatio int32
+#define SettlPeriod int8
+#define SettlType int16
+#define ShareProperty char[2]
 
-define Side char
-define StopPx Price
-define SubmittingInvestorID InvestorID
-define SubmittingInvestorName InvestorName
-define SubmittingInvestorType InvestorType
-define SubmittingMemberID MemberID
-define SubmittingPBUID PBUID
-define SubmittingTraderCode TraderCode
-define SubstCash Amt
-## define SupplementaryAgreement char[] 变长字符使用其他定义方法
+#define Side char
+#define StopPx Price
+#define SubmittingInvestorID InvestorID
+#define SubmittingInvestorName InvestorName
+#define SubmittingInvestorType InvestorType
+#define SubmittingMemberID MemberID
+#define SubmittingPBUID PBUID
+#define SubmittingTraderCode TraderCode
+#define SubstCash Amt
+## #define SupplementaryAgreement char[] 变长字符使用其他定义方法
 
-define SupplementaryAgreementLen NumInGroup
-define Tenderer char[6]
-define TimeInForce char
-define TimeToExpiration int16
-define TradeDate LocalMktDate
-define TradeHandlingInstr char
-define TradeID char[16]
-define TradeReportID char[10]
-define TradeReportRefID char[10]
-define TradeReportRejectReason int16
-define TradeReportTransType int8
-define TradeReportType int8
+#define SupplementaryAgreementLen NumInGroup
+#define Tenderer char[6]
+#define TimeInForce char
+#define TimeToExpiration int16
+#define TradeDate LocalMktDate
+#define TradeHandlingInstr char
+#define TradeID char[16]
+#define TradeReportID char[10]
+#define TradeReportRefID char[10]
+#define TradeReportRejectReason int16
+#define TradeReportTransType int8
+#define TradeReportType int8
 
-define TradingSessionID char[4]
-define TradingSessionSubID char[4]
-define TradSesEndTime LocalTimeStamp
-define TradSesStartTime LocalTimeStamp
-define TradSesStatus int16
-
-
-define TransactTime LocalTimestamp
-define TransfereePBUID PBUID
-define TrdAckStatus int8
-define TrdMatchID char[16]
-
-define TrdRptStatus int8
-define TrdSubType int16
-
-define TrdType int16
+#define TradingSessionID char[4]
+#define TradingSessionSubID char[4]
+#define TradSesEndTime LocalTimeStamp
+#define TradSesStartTime LocalTimeStamp
+#define TradSesStatus int16
 
 
-define UnderlyingCashOrderQty Amt
+#define TransactTime LocalTimestamp
+#define TransfereePBUID PBUID
+#define TrdAckStatus int8
+#define TrdMatchID char[16]
+
+#define TrdRptStatus int8
+#define TrdSubType int16
+
+#define TrdType int16
 
 
-define UnderlyingSecurityID char[8]
-define UnderlyingSecurityIDSource char[4]
-define UnderlyingShareProperty char[2]
-define UserInfo char[8]
-define ValidationCode int32
-define ValidUntilTime LocalTimestamp
-define VotingPreference char
-define VotingProposal int16
-define VotingSubProposal int16
+#define UnderlyingCashOrderQty Amt
+
+
+#define UnderlyingSecurityID char[8]
+#define UnderlyingSecurityIDSource char[4]
+#define UnderlyingShareProperty char[2]
+#define UserInfo char[8]
+#define ValidationCode int32
+#define ValidUntilTime LocalTimestamp
+#define VotingPreference char
+#define VotingProposal int16
+#define VotingSubProposal int16
 

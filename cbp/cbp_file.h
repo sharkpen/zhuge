@@ -12,9 +12,9 @@
 #include <map>
 #include <memory>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 #include "class_desp.h"
 #include "context.h"
@@ -64,7 +64,7 @@ class CbpFile {
     auto name_token = parser.NextToken();
     int note_line = name_token.line;
     std::stringstream ss;
-    
+
     while (true) {
       auto token = parser.NextToken();
       if (token.line == -1 && token.offset == -1) {
@@ -82,36 +82,133 @@ class CbpFile {
     auto field_context = context->contexts[name];
     field_context->define_maps[name_token.term] = value;
   }
-  
-  Type ParseType(std::shared_ptr<ParseContext> context, TokenParser &parser) {
+
+  Type ParseField(std::shared_ptr<ParseContext> context, TokenParser &parser) {
     Token token = parser.CurrentToken();
     std::string type = token.term;
-    if (Const::normal_types.count(type) == 0) {
-      print_err(token, name);
-    }
-    token = parser.NextToken();
     Type ttype;
-    if (token.term == "[") {
-      token = parser.NextToken();
-      int64_t v;
-      if (strings::string2int(token.term, &v)) {
-        ttype.len = v;
-      } else {
-        print_err(token, name);
-      }
-
-    }
-    if (token.term == "<") {
-      token = parser.NextToken();
-    }
-    token = parser.NextToken();
-    std::string field_name = token.term;
-    ttype.name = field_name;
     ttype.type = type;
+    if (type == "ref") {
+      token = parser.NextToken();
+      std::string ref_class = token.term;
+      token = parser.NextToken();
+      if (token.term != ";") {
+        print_err(token, name, "error ; missing");
+      }
+      ttype.ref_class = ref_class;
+      print_info(token, name, ttype.ToString());
+      token = parser.NextToken();
+      return ttype;
+    } else {
+      if (Const::normal_types.count(type) == 0) {
+        print_err(token, name, "parse type err : illegal type");
+      }
+      token = parser.NextToken();
+      if (token.term == "[") {
+        if (Const::simple_types.count(type) == 0) {
+          print_err(token, name, "error [ missing ");
+        }
+        token = parser.NextToken();
+        int64_t v;
+        if (strings::string2int(token.term, &v)) {
+          ttype.len = v;
+        } else {
+          if (v <= 0) {
+            print_err(token, name, "must be a positive integer");
+          }
+        }
+        token = parser.NextToken();
+        if (token.term != "]") {
+          print_err(token, name, "error ] missing unclose brackets");
+        }
+        token = parser.NextToken();
+        std::string field_name = token.term;
+        ttype.name = field_name;
+        token = parser.NextToken();
+        if (token.term != ";") {
+          print_err(token, name, "error ; missing");
+        }
+        print_info(token, name, ttype.ToString());
+        token = parser.NextToken();
+        return ttype; 
+      }
+      if (token.term == "<") {
+        if (type != "array") {
+          print_err(token, name, "error < missing");
+        }
+        token = parser.NextToken();
+        if (token.term == "ref") {
+          token = parser.NextToken();
+          std::string ref_field = token.term;
+          ttype.ref_field = ref_field;
+          token = parser.NextToken();
+          if (token.term != ",") {
+            print_err(token, name, "error , missing");
+          }
+          token = parser.NextToken();
+          std::string ref_class = token.term;
+          ttype.ref_class = ref_class;
+          token = parser.NextToken();
+          if (token.term != ">") {
+            print_err(token, name, "error > missing");
+          }
+          token = parser.NextToken();
+          std::string field_name = token.term;
+          ttype.name = field_name;
+          token = parser.NextToken();
+          if (token.term != ";") {
+            print_err(token, name, "error ; missing");
+          }
+          print_info(token, name, ttype.ToString());
+          token = parser.NextToken();
+          return ttype;
+        } 
+        int64_t v;
+        if (strings::string2int(token.term, &v)) {
+          ttype.len = v;
+          token = parser.NextToken();
+          if (token.term != ",") {
+            print_err(token, name, "error , missing");
+          }
+          token = parser.NextToken();
+          std::string ref_class = token.term;
+          ttype.ref_class = ref_class;
+          token = parser.NextToken();
+          if (token.term != ">") {
+            print_err(token, name, "error > missing");
+          }
+          token = parser.NextToken();
+          std::string field_name = token.term;
+          ttype.name = field_name;
+          token = parser.NextToken();
+          if (token.term != ";") {
+            print_err(token, name, "error ; missing");
+          }
+          print_info(token, name, ttype.ToString());
+          token = parser.NextToken();
+          return ttype;
+        }
+        print_err(token, name, "field array parse array");
+      }
+      std::string field_name = token.term;
+      if (is_correct_struct_name(field_name)) {
+        ttype.name = field_name;
+        token = parser.NextToken();
+        if (token.term != ";") {
+          print_err(token, name, "error ; missing");
+        }
+        print_info(token, name, ttype.ToString());
+        token = parser.NextToken();
+        return ttype;
+      } else {
+        print_err(token, name, "field is no correct");
+      }
+    }
+    print_err(token, name, "parse field error");
     return ttype;
   }
- 
-  void ParseField(std::shared_ptr<ParseContext> context, TokenParser &parser) {
+
+  /*void ParseField(std::shared_ptr<ParseContext> context, TokenParser &parser) {
     Token token = parser.CurrentToken();
     Type type = ParseType(context, parser);
     std::string field_name = parser.CurrentToken().term;
@@ -121,8 +218,8 @@ class CbpFile {
     } else {
       parser.NextToken();
     }
-  }
-  
+  }*/
+
   void ParseStruct(std::shared_ptr<ParseContext> context, TokenParser &parser) {
     Token struct_name = parser.NextToken();
     if (!is_correct_struct_name(struct_name.term)) {
@@ -135,16 +232,20 @@ class CbpFile {
     auto cbp_context = context->contexts[name];
     auto class_desp = std::make_shared<ClassDesp>();
     cbp_context->classes_desp[struct_name.term] = class_desp;
+    cbp_context->ordered_classes_desp.push_back(class_desp);
+    class_desp->name = struct_name.term;
     Token token = parser.NextToken();
-    while(token.term != "}") {
+    while (token.term != "}") {
       token = parser.CurrentToken();
       if (token.term == "##" || strings::is_prefix("##", token.term)) {
         ParseNote(context, parser);
         continue;
       }
-      ParseField(context, parser);
+      auto type = ParseField(context, parser);
       token = parser.CurrentToken();
+      class_desp->fields.push_back(type);
     }
+    class_desps.push_back(class_desp);
     parser.NextToken();
   }
 
@@ -171,7 +272,7 @@ class CbpFile {
       }
     }
   }
-  
+
   void ParseCbp(std::shared_ptr<ParseContext> context, TokenParser &parser) {
     parser.NextToken();
     while (true) {
@@ -191,10 +292,11 @@ class CbpFile {
     }
   }
   static std::string GetDefineValue(const std::string &value,
-      const std::string &name, std::shared_ptr<ParseContext> context) {
+                                    const std::string &name,
+                                    std::shared_ptr<ParseContext> context) {
     auto cbp_context = context->contexts[name];
     if (cbp_context->define_maps.count(value) > 0) {
-      std::string result =  cbp_context->define_maps.at(value);
+      std::string result = cbp_context->define_maps.at(value);
       if (is_field_type(result)) {
         return result;
       } else {
@@ -211,7 +313,8 @@ class CbpFile {
     return "";
   }
 
-  File* GenerateNewFile(TokenParser &parser, std::shared_ptr<ParseContext> context) {
+  File *GenerateNewFile(TokenParser &parser,
+                        std::shared_ptr<ParseContext> context) {
     File *f = new File();
     auto &token = parser.NextToken();
     int line = token.line;
@@ -228,7 +331,7 @@ class CbpFile {
       }
       auto result = GetDefineValue(term, name, context);
       if (result != "") {
-        term = result; 
+        term = result;
       }
       if (token.line > line) {
         f->PutLine(ss.str());
@@ -289,6 +392,7 @@ class CbpFile {
   std::string GetName() { return name; }
 
  private:
+  std::vector<std::shared_ptr<ClassDesp>> class_desps;
   std::vector<std::string> deps;
   std::string name;
   File *file;
@@ -321,8 +425,8 @@ class CbpParser {
       cbp_files[key] = cbp_file;
       cbp_file->ParseDep();
       order_files.push_back(cbp_file);
-      //std::cout << "cbp parser " << key
-     //           << " dep :" << cbp_file->GetDepFilesNum() << std::endl;
+      // std::cout << "cbp parser " << key
+      //           << " dep :" << cbp_file->GetDepFilesNum() << std::endl;
     }
   }
 
@@ -360,7 +464,7 @@ class CbpParser {
           break;
         }
         if (mark == success) {
-          //std::cout << success << "   " << group->files.size() << std::endl;
+          // std::cout << success << "   " << group->files.size() << std::endl;
           std::cerr << "file dependency recursion ";
           for (auto file : group->files) {
             if (context->parse_success.count(file->GetName()) == 0) {
@@ -375,6 +479,9 @@ class CbpParser {
       f->ParseSelf(context);
     }
     return true;
+  }
+  std::vector<CbpFile*> GetOrderFiles() {
+    return order_files;
   }
 
  private:

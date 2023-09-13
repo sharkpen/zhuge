@@ -6,32 +6,47 @@
  Last Modified: 2023-09-08
 */
 #pragma once
+#include <iostream>
 #include <memory>
 #include <ostream>
 #include <string>
-#include <iostream>
+
+#include "common.h"
 #include "context.h"
 #include "file.h"
-#include "common.h"
 namespace croot {
 namespace lltg {
-
+std::string inline TypeTrans(const std::string &type) { 
+  if (type == "int8") {
+    return "int8_t";
+  }
+  if (type == "int16") {
+    return "int16_t";
+  }
+  if (type == "int32") {
+    return "int32_t";
+  }
+  if (type == "int64") {
+    return "int64_t";
+  }
+  return type; 
+}
 
 class StringTokenIterator {
  public:
   StringTokenIterator(const std::string &line) : line(line) {}
   std::string NextToken() {
-    const static std::set<char> uniq_chars{'[',']','<', '>', ';', '{', '}'};
-    const char* p = line.c_str();
-    int current_offset = offset; 
+    const static std::set<char> uniq_chars{',', '[', ']', '<',
+                                           '>', ';', '{', '}'};
+    const char *p = line.c_str();
+    int current_offset = offset;
     while (current_offset < line.size() && p[current_offset] == ' ') {
       current_offset++;
     }
     offset = current_offset;
     if (uniq_chars.count(p[offset]) > 0) {
-        return line.substr(offset++, 1);
+      return line.substr(offset++, 1);
     }
-    
 
     while (current_offset < line.size() && p[current_offset] != ' ') {
       current_offset++;
@@ -48,9 +63,8 @@ class StringTokenIterator {
 
     return term;
   }
-  int Offset() {
-    return offset - len;
-  }
+  int Offset() { return offset - len; }
+
  private:
   int offset = 0;
   int len = 0;
@@ -60,9 +74,9 @@ class StringTokenIterator {
 class TokenParser {
  public:
   TokenParser(File *file) { this->file = file; }
-  Token& NextToken() {
+  Token &NextToken() {
     if (line_ite == nullptr) {
-        line_ite = std::make_shared<StringTokenIterator>(file->Line(line));
+      line_ite = std::make_shared<StringTokenIterator>(file->Line(line));
     }
     std::string term = line_ite->NextToken();
     if (term == "") {
@@ -73,7 +87,7 @@ class TokenParser {
         return token;
       };
       line++;
-      line_ite = std::make_shared<StringTokenIterator>(file->Line(line)); 
+      line_ite = std::make_shared<StringTokenIterator>(file->Line(line));
       return NextToken();
     } else {
       token.term = term;
@@ -82,9 +96,7 @@ class TokenParser {
       return token;
     }
   }
-  Token& CurrentToken() {
-    return token;
-  }
+  Token &CurrentToken() { return token; }
   void Reset() {
     line = 1;
     line_ite = nullptr;
@@ -96,8 +108,6 @@ class TokenParser {
   std::shared_ptr<StringTokenIterator> line_ite;
   File *file;
 };
-
-
 
 }  // namespace lltg
 }  // namespace croot
