@@ -34,14 +34,20 @@ class CppClassFile {
       one_context->current_class_desp = class_desp;
       ParseClassHeader(class_desp);
       ParseClass(class_desp, context, one_context);
-      ParseClassTail(class_desp);
+      ParseClassTail(class_desp, one_context);
     }
+    ParseTail();
   }
   void ParseHeader() {
     *cpp_file << "#include <cstring>" << Const::NL;
     *cpp_file << "#include <cstdint>" << Const::NL;
+    *cpp_file << "#include <iostream>" << Const::NL;
+    *cpp_file << "#include <string>" << Const::NL;
+    *cpp_file << "#pragma pack(push, 1)" << Const::NL;
   }
-  void PrintTail() {}
+  void ParseTail() {
+    *cpp_file << "#pragma pack(pop)" << Const::NL;
+  }
   std::shared_ptr<ClassDesp> GetClassDesp(
       const std::string &file_name, const std::string &class_name,
       std::shared_ptr<ParseContext> context) {
@@ -63,7 +69,29 @@ class CppClassFile {
     *cpp_file << class_desp->name;
     *cpp_file << " {" << Const::NL;
   }
-  void ParseClassTail(std::shared_ptr<ClassDesp> class_desp) {
+  void ParseClassTail(std::shared_ptr<ClassDesp> class_desp,
+                      std::shared_ptr<OneClassContext> context) {
+    *cpp_file << "void print(std::ostream &out = std::cout) {"
+              << Const::NL;
+    for (auto &entry : context->types) {
+      std::string name = entry.second.name;
+      std::string type = entry.second.type;
+      int len = entry.second.len;
+      if (len == 0 && Const::simple_types.count(type) > 0) {
+        *cpp_file << "out << \"name: " << name << " value: \" <<  this->"
+                  << name << " << std::endl;" << Const::NL;
+        continue;
+      }
+      if (len > 0 && Const::simple_types.count(type) > 0) {
+        if (type == "char") {
+          *cpp_file << "out << \"name: " << name << " value: \";";
+          *cpp_file << "out.write(" << name << "," << std::to_string(len) << ");" << Const::NL;
+        }
+      }
+    }
+
+    *cpp_file << "};" << Const::NL;
+
     *cpp_file << "};" << Const::NL;
   }
   void ParseClass(std::shared_ptr<ClassDesp> class_desp,
@@ -151,6 +179,7 @@ class CppClassFile {
                       << " is not  int " << ref.type << std::endl;
             exit(1);
           }
+          (one_context->types[f.name]) = f;
 
           *cpp_file << f.ref_class << " " << f.name << "["
                     << std::to_string(f.len) << "];" << Const::NL;
