@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/base64_test.dir/base64.cc.o CMakeFiles/base64_test.dir/base64_test.cc.o -o base64_test 

@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/parse.dir/common.cc.o CMakeFiles/parse.dir/file_util.cc.o CMakeFiles/parse.dir/parse.cc.o -o parse  -lstdc++fs 
