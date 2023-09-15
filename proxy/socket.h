@@ -32,13 +32,11 @@ class Socket {
       std::cerr << "Invalid address." << std::endl;
       return -1;
     }
-    std::cout <<"connext" << std::endl;
     if (connect(client_socket, (struct sockaddr*)&server_address,
                 sizeof(server_address)) == -1) {
       std::cerr << "Failed to connect to server." << std::endl;
       return -1;
     }
-    std::cout <<"connext" << std::endl;
     return 0;
   }
   int Listen() {
@@ -47,7 +45,6 @@ class Socket {
       std::cerr << "Failed to create socket" << std::endl;
       return -1;
     }
-    std::cout << "1" << std::endl;
     sockaddr_in server_address{};
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
@@ -57,13 +54,11 @@ class Socket {
       std::cerr << "Failed to bind socket" << std::endl;
       return false;
     }
-    std::cout << "2" << std::endl;
     int listen_result = listen(server_socket, SOMAXCONN);
     if (listen_result == -1) {
       std::cerr << "Failed to listen on socket" << std::endl;
       return -1;
     }
-    std::cout << "3" << std::endl;
     return listen_result;
   }
   int Accept() {

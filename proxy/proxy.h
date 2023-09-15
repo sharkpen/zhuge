@@ -13,13 +13,13 @@
 #include <thread>
 
 #include "base64.h"
-#include "socket.h"
 #include "log.h"
+#include "socket.h"
 
 namespace croot {
 namespace lltg {
 
-void inline do_proxy(Socket* reader, Socket* sender, Logger *logger) {
+void inline do_proxy(Socket* reader, Socket* sender, Logger* logger) {
   int32_t type;
   int32_t length;
   int32_t checksum;
@@ -46,7 +46,8 @@ void inline do_proxy(Socket* reader, Socket* sender, Logger *logger) {
         break;
       }
     }
-    logger->Info(type, base64_encode((unsigned char const*)(buffer + 8), length));
+    logger->Info(type,
+                 base64_encode((unsigned char const*)(buffer + 8), length));
 
     len = reader->Read(4, buffer + 8 + length);
     if (len <= 0) {
@@ -73,17 +74,22 @@ class TcpProxy {
     if (server->Listen() == -1) {
       exit(1);
     }
-    if (server->Accept() != -1) {
-      client = std::make_shared<Socket>(remote_ip, remote_port);
-      if (client->Connect() != -1) {
-        reader_logger = std::make_shared<Logger>("reader_logger.log");
-        writer_logger = std::make_shared<Logger>("writer_logger.log");
-        read_thread =
-            std::make_shared<std::thread>(do_proxy, server.get(), client.get(), writer_logger.get());
-        write_thread =
-            std::make_shared<std::thread>(do_proxy, client.get(), server.get(), reader_logger.get());
-        read_thread->join();
-        write_thread->join();
+    while (true) {
+      if (server->Accept() != -1) {
+        client = std::make_shared<Socket>(remote_ip, remote_port);
+        if (client->Connect() != -1) {
+          reader_logger = std::make_shared<Logger>("reader_logger.log");
+          writer_logger = std::make_shared<Logger>("writer_logger.log");
+          read_thread = std::make_shared<std::thread>(
+              do_proxy, server.get(), client.get(), writer_logger.get());
+          write_thread = std::make_shared<std::thread>(
+              do_proxy, client.get(), server.get(), reader_logger.get());
+          read_thread->join();
+          write_thread->join();
+          client->Close();
+          server->Close();
+          std::cerr << "connection reset" << std::endl;
+        }
       }
     };
   };
