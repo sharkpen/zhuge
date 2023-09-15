@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/test.dir/common.cc.o CMakeFiles/test.dir/file_util.cc.o CMakeFiles/test.dir/test.cc.o -o test  -lstdc++fs 

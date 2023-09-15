@@ -21,7 +21,7 @@ namespace lltg {
 class Socket {
  public:
   Socket(const std::string& host, int port) : host(host), port(port) {}
-  std::string Info() { return host + std::to_string(port); }
+  std::string Info() { return host + ":" + std::to_string(port); }
   int Connect() {
     client_socket = socket(AF_INET, SOCK_STREAM, 0);
 

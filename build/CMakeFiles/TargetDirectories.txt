@@ -1,0 +1,10 @@
+/home/lijinqi/workspace/zhuge/build/CMakeFiles/rebuild_cache.dir
+/home/lijinqi/workspace/zhuge/build/CMakeFiles/edit_cache.dir
+/home/lijinqi/workspace/zhuge/build/cbp/CMakeFiles/rebuild_cache.dir
+/home/lijinqi/workspace/zhuge/build/cbp/CMakeFiles/edit_cache.dir
+/home/lijinqi/workspace/zhuge/build/cbp/CMakeFiles/parse.dir
+/home/lijinqi/workspace/zhuge/build/cbp/CMakeFiles/test.dir
+/home/lijinqi/workspace/zhuge/build/proxy/CMakeFiles/rebuild_cache.dir
+/home/lijinqi/workspace/zhuge/build/proxy/CMakeFiles/proxy.dir
+/home/lijinqi/workspace/zhuge/build/proxy/CMakeFiles/edit_cache.dir
+/home/lijinqi/workspace/zhuge/build/proxy/CMakeFiles/base64_test.dir
